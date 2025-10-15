@@ -17,3 +17,37 @@ build-backend = "poetry.core.masonry.api"
 packages = [
 { include = "src" }
 ]
+
+[tool.mypy]
+disallow_untyped_defs = true
+warn_return_any = true
+exclude = 'venv'
+
+[tool.black]
+line-length = 119 # Соответствующий flake8 и isort
+exclude = '''
+(
+  /(
+      \.eggs         # Исключить несколько общих каталогов
+    | \.git          # в корне проекта
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | dist
+  )/
+  | foo.py           # Также отдельно исключить файл с именем foo.py
+                     # в корне проекта
+)
+'''
+
+[dependency-groups]
+dev = [
+    "flake8 (>=7.3.0,<8.0.0)",
+    "isort (>=7.0.0,<8.0.0)",
+    "black (>=25.9.0,<26.0.0)",
+    "pre-commit (>=4.3.0,<5.0.0)"
+]
+
+[tool.isort]
+line_length = 119
