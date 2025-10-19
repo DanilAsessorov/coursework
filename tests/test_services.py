@@ -1,22 +1,25 @@
 import json
 from datetime import datetime
+
 import pandas as pd
 
 from src.services import (
     analyze_cashback_categories,
     investment_bank,
-    simple_search,
-    search_phone_numbers,
     search_person_transfers,
+    search_phone_numbers,
+    simple_search,
 )
 
 
 def test_analyze_cashback_categories_simple():
-    df = pd.DataFrame({
-        "Дата операции": pd.to_datetime(["2025-01-05", "2025-01-10", "2025-02-01"]),
-        "Сумма платежа": [-100.0, -200.0, -50.0],
-        "Категория": ["Еда", "Еда", "Транспорт"],
-    })
+    df = pd.DataFrame(
+        {
+            "Дата операции": pd.to_datetime(["2025-01-05", "2025-01-10", "2025-02-01"]),
+            "Сумма платежа": [-100.0, -200.0, -50.0],
+            "Категория": ["Еда", "Еда", "Транспорт"],
+        }
+    )
 
     res = analyze_cashback_categories(df, 2025, 1)
     data = json.loads(res)
@@ -41,12 +44,14 @@ def test_investment_bank_simple():
 
 
 def test_simple_search_found_and_date_format():
-    df = pd.DataFrame({
-        "Дата операции": pd.to_datetime(["2025-01-05 10:00", "2025-01-06 11:00"]),
-        "Дата платежа": pd.to_datetime(["2025-01-05", "2025-01-06"]),
-        "Описание": ["Оплата в магазине", "Перевод другу"],
-        "Категория": ["Покупки", "Переводы"],
-    })
+    df = pd.DataFrame(
+        {
+            "Дата операции": pd.to_datetime(["2025-01-05 10:00", "2025-01-06 11:00"]),
+            "Дата платежа": pd.to_datetime(["2025-01-05", "2025-01-06"]),
+            "Описание": ["Оплата в магазине", "Перевод другу"],
+            "Категория": ["Покупки", "Переводы"],
+        }
+    )
 
     res = simple_search("перевод", df)
     data = json.loads(res)
@@ -63,12 +68,14 @@ def test_search_phone_numbers_empty_and_find():
     res_empty = search_phone_numbers(df_empty)
     assert json.loads(res_empty) == []
 
-    df = pd.DataFrame({
-        "Дата операции": pd.to_datetime(["2025-01-01", "2025-01-02"]),
-        "Дата платежа": pd.to_datetime(["2025-01-01", "2025-01-02"]),
-        "Описание": ["Позвоните +7 (910) 123-45-67", "Без номера"],
-        "Категория": ["Связь", "Прочее"],
-    })
+    df = pd.DataFrame(
+        {
+            "Дата операции": pd.to_datetime(["2025-01-01", "2025-01-02"]),
+            "Дата платежа": pd.to_datetime(["2025-01-01", "2025-01-02"]),
+            "Описание": ["Позвоните +7 (910) 123-45-67", "Без номера"],
+            "Категория": ["Связь", "Прочее"],
+        }
+    )
 
     res = search_phone_numbers(df)
     data = json.loads(res)
@@ -81,12 +88,14 @@ def test_search_person_transfers_empty_and_find():
     res_empty = search_person_transfers(df_empty)
     assert json.loads(res_empty) == []
 
-    df = pd.DataFrame({
-        "Дата операции": pd.to_datetime(["2025-01-01", "2025-01-02"]),
-        "Дата платежа": pd.to_datetime(["2025-01-01", "2025-01-02"]),
-        "Описание": ["Перевод Иванов И.", "Перевод ООО Рога и С."],
-        "Категория": ["Переводы", "Переводы"],
-    })
+    df = pd.DataFrame(
+        {
+            "Дата операции": pd.to_datetime(["2025-01-01", "2025-01-02"]),
+            "Дата платежа": pd.to_datetime(["2025-01-01", "2025-01-02"]),
+            "Описание": ["Перевод Иванов И.", "Перевод ООО Рога и С."],
+            "Категория": ["Переводы", "Переводы"],
+        }
+    )
 
     res = search_person_transfers(df)
     data = json.loads(res)

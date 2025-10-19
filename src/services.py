@@ -2,7 +2,9 @@ import json
 import logging
 import re
 from typing import Any, Dict, List
+
 import pandas as pd
+
 
 def analyze_cashback_categories(df: pd.DataFrame, year: int, month: int) -> str:
     """
@@ -33,6 +35,7 @@ def analyze_cashback_categories(df: pd.DataFrame, year: int, month: int) -> str:
         logging.exception("Произошла ошибка")
         return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
 
+
 def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) -> float:
     """
     Рассчитывает сумму, которую удалось бы отложить в «Инвесткопилку».
@@ -52,6 +55,7 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
         logging.exception(f"Произошла ошибка: {e}")
         return 0.0
 
+
 def simple_search(search_string: str, df: pd.DataFrame) -> str:
     """
     Ищет транзакции, содержащие запрос в описании или категории, и форматирует даты.
@@ -65,8 +69,8 @@ def simple_search(search_string: str, df: pd.DataFrame) -> str:
 
         # 2. Выполняем поиск
         search_results = df[
-            df["Описание"].str.contains(search_string, case=False, na=False) |
-            df["Категория"].str.contains(search_string, case=False, na=False)
+            df["Описание"].str.contains(search_string, case=False, na=False)
+            | df["Категория"].str.contains(search_string, case=False, na=False)
         ]
 
         # 3. Преобразуем в JSON
@@ -77,6 +81,7 @@ def simple_search(search_string: str, df: pd.DataFrame) -> str:
     except Exception as e:
         logging.exception(f"Произошла ошибка: {e}")
         return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
+
 
 def search_phone_numbers(df: pd.DataFrame) -> str:
     """
@@ -102,6 +107,7 @@ def search_phone_numbers(df: pd.DataFrame) -> str:
         logging.exception(f"Произошла ошибка: {e}")
         return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
 
+
 def search_person_transfers(df: pd.DataFrame) -> str:
     """
     Возвращает транзакции, которые относятся к переводам физлицам.
@@ -117,8 +123,8 @@ def search_person_transfers(df: pd.DataFrame) -> str:
         # 2. Выполняем поиск
         person_transfer_pattern = re.compile(r"^Перевод\s[А-Я][а-я]+\s[А-Я]\.$")
         person_transfers = df[
-            (df["Категория"] == "Переводы") &
-            df["Описание"].str.contains(person_transfer_pattern, regex=True, na=False)
+            (df["Категория"] == "Переводы")
+            & df["Описание"].str.contains(person_transfer_pattern, regex=True, na=False)
         ]
 
         # 3. Преобразуем в JSON
